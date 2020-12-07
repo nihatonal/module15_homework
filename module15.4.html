@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>module 15.4</title>
+    <style>
+        .container{
+            margin: 0 auto;
+            width: 800px;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .btn{
+            padding: 0;
+            background-color: transparent;
+            border: none;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
+            box-shadow: none;
+            cursor: pointer;
+            
+            display: flex;
+            margin: 5px 10px;
+            padding: 10px 15px;
+            border-radius: 1px;
+            font-size: 12px;
+            line-height: 15px;
+            text-transform: uppercase;
+            color: white;
+            background: #315efb;
+            transition: 0.1s;
+        }
+        .btn:hover {
+            box-shadow: 0px 2px 8px 2px rgba(39, 49, 82, 0.8);
+                
+        }
+        h3{
+            font-size: 24px;
+        }
+        .result, .coordinates{
+            width: 600px;
+            height: 150px;
+            font-size: 18px;
+        }
+        .result span, .coordinates span{
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button class="btn">Click</button>
+        <div>
+            <h3>Your Coordinates</h3>
+            <div class="coordinates"></div>
+            <div class="result"></div>
+        </div>
+        
+    </div>
+    
+    
+    <script>
+        function pageLoaded(){
+
+        const btn = document.querySelector(".btn");
+        const output2 = document.querySelector(".coordinates");
+        const output = document.querySelector(".result");
+
+        const error = () => {
+                    output2.innerHTML = '<p>Информация о местоположении недоступна</p>';
+                            };
+                
+        const success = (position) => {
+       // console.log('position', position);
+        const latitude  = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        output2.innerHTML = `<p><span>Широта:</span> ${latitude} °</p>
+                            <p><span>Долгота:</span> ${longitude} °</p>`;
+        const url = `https://api.ipgeolocation.io/timezone?apiKey=0a36c535d72042b7b061ffbe637bb431&lat=${latitude}&long=${longitude}`
+            
+                        fetch(url)
+                        .then((response) => {
+                        const result = response.json();
+                        return result;
+                        })
+                        .then((data) => {
+                        console.log(data.date_time_txt)
+                        let outputMsg = `<p><span>Bременная зона, в которой находится пользователь::</span> ${data.timezone}</p>
+                                         <p><span>Mестные дата и время:</span> ${data.date_time_txt}</p>` 
+                            output.innerHTML = outputMsg;               
+                        })
+                        .catch(() => { console.log('error') });
+        }
+
+        btn.addEventListener("click", () => {
+  
+            if (!navigator.geolocation) {
+                output2.innerHTML = `<p>Geolocation не поддерживается вашим браузером</p>`;
+            } else {
+                output2.innerHTML = `<p>'Определение местоположения…'</p>`;
+                navigator.geolocation.getCurrentPosition(success, error); 
+            }
+ 
+        })
+    }
+        document.addEventListener("DOMContentLoaded", pageLoaded);
+    </script>
+</body>
+</html>

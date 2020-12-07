@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>module 15.5</title>
+    <style>
+       .container{
+           width: 500px;
+           height: 500px;
+           background: rgb(205, 240, 245);
+           margin: 0 auto;
+           margin-top: 2rem;
+           padding: 10px;
+           border-radius: 5px;
+           
+           display: flex;
+           flex-direction: column;
+           justify-content: space-between;
+           align-items: center;
+       }
+       .connect {
+        box-shadow: 5px 5px 5px rgb(20, 230, 1);
+       }
+       .close {
+        box-shadow: 5px 5px 5px rgb(247, 7, 7);
+       }
+
+       .wrapper_status{
+           font-size: 24px;
+           color: rgb(20, 230, 1);
+           font-weight: 500;
+           text-shadow: 1px 1px 1px #685151;
+       }
+       .wrapper_input{
+           display: flex;
+           width: 450px;
+           justify-content: space-evenly;
+           border-radius: inherit;
+       }
+       input {
+            width: 300px;
+            padding: 5px;
+            border: none;
+            border-radius: inherit;
+            outline: none;
+            font-size: 14px;
+       }
+       input:focus {
+           color: rgb(82, 19, 0);
+       }
+       .btn_send{
+            padding: 5px;
+            width: 100px;
+            border-radius: inherit;
+            border: none;
+            outline: none;
+            background-color: #BAD7EC;
+            color: rgb(82, 19, 0);
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all .3s;
+       }
+       .btn_send:hover{
+           box-shadow: 2px 2px 2px rgb(139, 139, 139);
+       }
+       .output{
+        height: 500px;
+        width: 450px;
+        margin: 20px 0;
+        background-color: #fff;
+        border-radius: inherit;
+        padding: 10px;
+        overflow-y: scroll;
+        position: relative;
+        display: flex;
+        flex-wrap: nowrap;
+        flex-direction: column;
+       }
+       .output > div {
+        max-width: 80%;
+        padding: 5px 10px;
+        margin: 5px 0;
+        border-radius: 3px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        }
+        .output .recieved {
+        border: 2px solid #BAD7EC;
+        align-self: flex-start;
+        color: rgb(139, 21, 21);
+        }
+        .output .sent {
+        border: 2px solid #BAD7EC;
+        align-self: flex-end;
+        color: rgb(0, 46, 105);
+        }
+        
+       
+       .btn{
+           color: #286b9b;
+           outline: none;
+           border: none;
+           background-color: transparent;
+           border-radius: 5px;
+           cursor: pointer;
+           font-weight: bold;
+       }
+      
+       
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="wrapper_status">
+            
+        </div>
+       <div class="wrapper_input">
+           <input id="msg" type="text" >
+           <button class="btn_send">Отправить</button>
+       </div>
+
+       <div class="output" id="output"> </div>
+ 
+    </div>
+      
+    
+    <script>
+        const wsUri = "wss://echo.websocket.org/";
+
+        function pageLoaded(){
+            const output = document.querySelector(".output");
+            const btn_send = document.querySelector(".btn_send");
+            const input = document.getElementById("msg");
+            const platform = document.querySelector(".container");
+            const status = document.querySelector(".wrapper_status");
+           
+            let socket = new WebSocket(wsUri);
+          
+            socket.onopen = () => {
+                console.log("Connect")
+                //platform.style.boxShadow = "5px 5px 5px green;";
+                platform.classList.add("connect");
+                status.innerHTML = `<p>Green color &mdash; Connected!</p>`;
+            }
+
+            socket.onmessage = (event) => {
+                writeToPanel(event.data, true);
+            }
+
+            socket.onerror = () => {
+                console.log("При передаче данных произошла ошибка");
+                platform.classList.add("close");
+                status.innerHTML = `<p>Red color &mdash; Not Connected!</p>`;
+            }
+
+            btn_send.addEventListener("click", sendMsg);
+  
+            function sendMsg() {
+                if (!input.value) return;
+                
+                if(input.value.toLowerCase() != "гео-локации" && input.value.toLowerCase() != "геолокации" && input.value.toLowerCase() != "geolocation"){
+                    socket.send(input.value);
+                    writeToPanel(input.value, false);  
+                } else {
+                    createButton(input.value);
+                    const btnGeolocation = document.querySelector(".btn");
+                    btnGeolocation.addEventListener("click",getLocation)
+   
+                }
+                
+                input.value = ""
+            }
+
+            function getLocation() {
+                const error = () => {
+                        console.log('Невозможно получить ваше местоположение');
+                }
+
+                const success = (position) => {
+                    console.log('position', position);
+                    const latitude  = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+                    const url = `https://www.openstreetmap.org/search?query=${latitude}%2C%20${longitude}`;
+                }
+                
+                if (!navigator.geolocation) {
+                        console.log('Geolocation не поддерживается вашим браузером');
+                } else {
+                        console.log('Определение местоположения…');
+                        navigator.geolocation.getCurrentPosition(success, error);
+                }
+
+            }
+            
+            function writeToPanel(message, isRecieved) {
+                let msgHTML = `<div class="${isRecieved? "recieved" : "sent"}">${message}</div>`;
+                output.innerHTML += msgHTML;
+            }
+            function createButton (message) {
+                let button_msg = `<div class="sent"><button class="btn">${message}</button></div>`;
+                output.innerHTML += button_msg;
+            }
+        }
+        document.addEventListener("DOMContentLoaded", pageLoaded);
+    </script>
+</body>
+</html>

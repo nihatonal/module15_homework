@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module 15.1</title>
+    <style>
+       .container{
+           background-color: #19ffec;
+           height:100vh;
+           width: 100vw;
+           display: flex;
+           justify-content: space-evenly;
+           padding-top: 2rem;
+       }
+       .wrapper_flag{
+           height: 200px;
+           width: 200px;
+           display: flex;
+           flex-direction: column;
+           align-items:center ;
+           justify-content: space-between;
+       }
+       .wrapper_flag p{
+           color: rgb(189, 3, 3);
+           font-size: 24px;
+           font-weight: 500;
+       }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="wrapper_flag">
+            <p>Russia</p>
+            <div class="svg_wrapper">
+                <svg height="120" width="180">
+                    <rect x="0" y="0" width="180" height="40" style="fill:#ffffff;" />
+                    <rect x="0" y="40" width="180" height="40" style="fill:#0039A6;" />
+                    <rect x="0" y="80" width="180" height="40" style="fill:#D52B1E;" />
+                </svg>              
+            </div>
+        </div>
+
+        <div class="wrapper_flag">
+            <p>France</p>
+            <div class="svg_wrapper">
+                <svg height="120" width="180">
+                    <rect x="0" y="0" width="60" height="120" style="fill:#002395;" />
+                    <rect x="60" y="0" width="60" height="120" style="fill:#ffffff;" /> 
+                    <rect x="120" y="0" width="60" height="120" style="fill:#ED2939;" /> 
+                </svg>              
+            </div>
+        </div>
+
+        <div class="wrapper_flag">
+            <p>Finland</p>
+            <div class="svg_wrapper">
+                <svg height="120" width="180">
+                    <rect x="0" y="0" width="180" height="120" style="fill:#ffffff;" />
+                    <rect x="0" y="45" width="180" height="30" style="fill:#003580;" />
+                    <rect x="50" y="0" width="30" height="120" style="fill:#003580;" />
+        
+                </svg>              
+            </div>
+        </div>
+
+        <div class="wrapper_flag">
+            <p>Switzerland</p>
+            <div class="svg_wrapper">
+                <svg height="120" width="180">
+                    <rect x="0" y="0" width="180" height="120" style="fill:#D62718;" />
+                    <rect x="77" y="20" width="25" height="80" style="fill:#ffffff;" />
+                    <rect x="50" y="47" width="80" height="25" style="fill:#ffffff;" />
+                </svg>              
+            </div>
+        </div>
+
+        <div class="wrapper_flag">
+            <p>Japan</p>
+            <div class="svg_wrapper">
+                <svg height="120" width="180">
+                    <rect x="0" y="0" width="180" height="120" style="fill:#ffffff;" />
+                    <circle  cx="90" cy="60" r="40" fill="#BB002D" />
+                </svg>              
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
