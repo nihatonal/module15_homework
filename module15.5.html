@@ -109,7 +109,10 @@
            cursor: pointer;
            font-weight: bold;
        }
-      
+       a{
+           text-decoration: none;
+           font-size: 14px;
+       }
        
     </style>
 </head>
@@ -124,6 +127,7 @@
        </div>
 
        <div class="output" id="output"> </div>
+       
  
     </div>
       
@@ -142,7 +146,6 @@
           
             socket.onopen = () => {
                 console.log("Connect")
-                //platform.style.boxShadow = "5px 5px 5px green;";
                 platform.classList.add("connect");
                 status.innerHTML = `<p>Green color &mdash; Connected!</p>`;
             }
@@ -162,7 +165,7 @@
             function sendMsg() {
                 if (!input.value) return;
                 
-                if(input.value.toLowerCase() != "гео-локации" && input.value.toLowerCase() != "геолокации" && input.value.toLowerCase() != "geolocation"){
+                if(input.value.toLowerCase() != "гео-локация" && input.value.toLowerCase() != "геолокация" && input.value.toLowerCase() != "geolocation"){
                     socket.send(input.value);
                     writeToPanel(input.value, false);  
                 } else {
@@ -185,6 +188,8 @@
                     const latitude  = position.coords.latitude;
                     const longitude = position.coords.longitude;
                     const url = `https://www.openstreetmap.org/search?query=${latitude}%2C%20${longitude}`;
+                    createLink(url, false);
+                    
                 }
                 
                 if (!navigator.geolocation) {
@@ -204,6 +209,11 @@
                 let button_msg = `<div class="sent"><button class="btn">${message}</button></div>`;
                 output.innerHTML += button_msg;
             }
+            function createLink (message) {
+                let link = `<div class="sent"><a href="${message}" target="_blank">${message}</a></div>`;
+                output.innerHTML += link;
+            }
+            
         }
         document.addEventListener("DOMContentLoaded", pageLoaded);
     </script>
